@@ -1,7 +1,7 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Url } from 'url';
-
-export class Bus {
+import { Prop, Schema,SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+@Schema()
+export class Bus extends Document{
   @Prop()
   number: string;
 
@@ -20,5 +20,4 @@ export class Bus {
   @Prop()
   currentLocationY: number;
 }
-export const TaskSchema = SchemaFactory.createForClass(Bus);
-export type TaskDocument = Bus & Document;
+export const BusSchema = SchemaFactory.createForClass(Bus);

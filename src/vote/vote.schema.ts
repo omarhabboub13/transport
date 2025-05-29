@@ -1,11 +1,11 @@
-import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
+import { Types, Document } from 'mongoose';
+@Schema()
+export class Vote extends Document {
+  @Prop({ type: Types.ObjectId, ref: 'Trip' })
+  tripId: Types.ObjectId;
 
-export class Vote {
-  @Prop()
-  tripId: number;
-
-  @Prop()
-  studentId: number;
+  @Prop({ type: Types.ObjectId, ref: 'Student' })
+  studentId: Types.ObjectId;
 }
-export const TaskSchema = SchemaFactory.createForClass(Vote);
-export type TaskDocument = Vote & Document;
+export const VoteSchema = SchemaFactory.createForClass(Vote);

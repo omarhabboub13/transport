@@ -5,5 +5,6 @@ export class CreateDriverDto {
   name: string;
   @IsString()
   phone: string;
+  @IsString()
+  BusId:string;
 }
-// export class UpdateDriverDto extends PartialType(CreateDriverDto) {}

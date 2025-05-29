@@ -2,10 +2,10 @@ import { IsInt } from "class-validator";
 
 export class CreateVoteDto {
   @IsInt()
-  tripId: number;
+  tripId: string;
 
   @IsInt()
-  studentId: number;
+  studentId: string;
 }
 
 // export class UpdateVoteDto extends PartialType(CreateVoteDto) {}

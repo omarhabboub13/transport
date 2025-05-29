@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ObjectId } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
@@ -13,7 +13,7 @@ export class Point extends Document {
   @Prop()
   locationY: number;
 
-  @Prop({ ref: 'lines' })
-  lineId: ObjectId;
+  @Prop({ type: Types.ObjectId,ref: 'lines' })
+  lineId: Types.ObjectId;
 }
-export const TaskSchema = SchemaFactory.createForClass(Point);
+export const PointSchema = SchemaFactory.createForClass(Point);
