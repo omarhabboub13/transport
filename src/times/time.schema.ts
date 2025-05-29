@@ -1,8 +1,8 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
-
-export class Time {
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+@Schema()
+export class Time extends Document {
   @Prop()
   time: string;
 }
-export const TaskSchema = SchemaFactory.createForClass(Time);
-export type TaskDocument = Time & Document;
+export const TimeSchema = SchemaFactory.createForClass(Time);

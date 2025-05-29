@@ -5,4 +5,4 @@ export class Line  extends Document{
   @Prop()
   name: string;
 }
-export const TaskSchema = SchemaFactory.createForClass(Line);
+export const LineSchema = SchemaFactory.createForClass(Line);

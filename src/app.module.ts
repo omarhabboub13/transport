@@ -11,9 +11,24 @@ import { TripModule } from './trip/trip.module';
 import { VoteModule } from './vote/vote.module';
 import { PointTripModule } from './point_trip/point_trip.module';
 import { PresetModule } from './preset/preset.module';
+import { AuthModule } from './auth/auth.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [PointsModule, TimesModule, LinesModule, DriverModule, BusModule, StudentModule, TripModule, VoteModule, PointTripModule, PresetModule],
+  imports: [
+    PointsModule,
+    TimesModule,
+    LinesModule,
+    DriverModule,
+    BusModule,
+    StudentModule,
+    TripModule,
+    VoteModule,
+    PointTripModule,
+    PresetModule,
+    AuthModule,
+    MongooseModule.forRoot('mongodb://localhost/transportDB'),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
