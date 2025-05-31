@@ -88,6 +88,20 @@
       }
     }
     async getStudentsWithPresets() {
-      return this.studentModel.find().populate('presetId').exec();
+      const students = await this.studentModel
+        .find()
+        .populate('presetId')
+        .exec();
+
+      const details = students.map((student) => ({
+        student: {
+          _id: student._id,
+          name: student.name,
+          phone: student.phone,
+        },
+        preset: student.presetId, // Will be an object or null
+      }));
+
+      return { details };
     }
   }

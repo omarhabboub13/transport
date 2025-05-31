@@ -37,4 +37,80 @@ export class VoteService {
       throw new NotFoundException('err');
     }
   }
+  async getVotesWithPointAndStudents() {
+    const results = await this.presetModel.aggregate([
+      // Lookup trip for each vote
+      {
+        $lookup: {
+          from: 'trips',
+          localField: 'tripId',
+          foreignField: '_id',
+          as: 'trip',
+        },
+      },
+      { $unwind: '$trip' },
+
+      // Lookup point by matching trip.lineId === point.lineId
+      {
+        $lookup: {
+          from: 'points',
+          localField: 'trip.lineId',
+          foreignField: 'lineId',
+          as: 'points',
+        },
+      },
+
+      // Lookup all students who voted for trips with the same lineId
+      {
+        $lookup: {
+          from: 'votes',
+          let: { lineId: '$trip.lineId' },
+          pipeline: [
+            {
+              $lookup: {
+                from: 'trips',
+                localField: 'tripId',
+                foreignField: '_id',
+                as: 'tripMatch',
+              },
+            },
+            { $unwind: '$tripMatch' },
+            {
+              $match: {
+                $expr: { $eq: ['$$lineId', '$tripMatch.lineId'] },
+              },
+            },
+            {
+              $lookup: {
+                from: 'students',
+                localField: 'studentId',
+                foreignField: '_id',
+                as: 'student',
+              },
+            },
+            { $unwind: '$student' },
+            {
+              $replaceWith: '$student',
+            },
+          ],
+          as: 'studentsVotedForSamePoint',
+        },
+      },
+
+      // Optional: Remove password before returning
+      {
+        $project: {
+          trip: 1,
+          points: 1,
+          studentsVotedForSamePoint: {
+            _id: 1,
+            name: 1,
+            phone: 1,
+          },
+        },
+      },
+    ]);
+
+    return { details: results };
+  }
 }

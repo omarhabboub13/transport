@@ -1,4 +1,4 @@
-import { IsInt } from "class-validator";
+import { IsInt } from 'class-validator';
 
 export class CreateTripDto {
   @IsInt()
@@ -8,7 +8,5 @@ export class CreateTripDto {
   timeId: string;
 
   @IsInt()
-  busId: string;
+  busId?: string;
 }
-
-// export class UpdateTripDto extends PartialType(CreateTripDto) {}

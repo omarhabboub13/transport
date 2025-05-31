@@ -8,7 +8,7 @@ export class Trip extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Time' })
   timeId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Bus' })
-  busId: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'Bus',default:null , })
+  busId?: Types.ObjectId;
 }
 export const TripSchema = SchemaFactory.createForClass(Trip);

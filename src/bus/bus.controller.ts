@@ -22,4 +22,8 @@ export class BusController {
   update(@Param('id') id: string, @Body() updated: CreateBusDto) {
     return this.busService.updatebus(id, updated);
   }
+  @Get('withtrips')
+  async buswithtrips() {
+    return this.busService.getBusesWithTrips();
+  }
 }
