@@ -1,6 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { VoteService } from './vote.service';
-import {CreateVoteDto} from "./DTO/create-vote.dto";
+import { CreateVoteDto } from './DTO/create-vote.dto';
 
 @Controller('vote')
 export class VoteController {
@@ -20,5 +28,9 @@ export class VoteController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updated: CreateVoteDto) {
     return this.voteService.updatevote(id, updated);
+  }
+  @Get('with-point-and-students')
+  async getVotesWithPointAndStudents() {
+    return this.voteService.getVotesWithPointAndStudents();
   }
 }

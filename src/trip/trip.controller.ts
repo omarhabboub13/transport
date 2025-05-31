@@ -14,11 +14,11 @@ import { CreateTripDto } from './DTO/create-trip.dto';
 export class TripController {
   constructor(private readonly tripService: TripService) {}
   @Post()
-  createpreset(@Body() body: CreateTripDto) {
+  createtrip(@Body() body: CreateTripDto) {
     return this.tripService.createtrip(body);
   }
   @Get()
-  fetchPresets() {
+  fetchtrip() {
     return this.tripService.fetchAlltrips();
   }
   @Delete(':id')

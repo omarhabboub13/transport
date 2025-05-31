@@ -23,6 +23,6 @@ export class DriverController {
   }
   @Get('withbus')
   async studentswithprofiles() {
-    return this.driverService.getdriverwithbus();
+    return this.driverService.getDriversWithBus();
   }
 }

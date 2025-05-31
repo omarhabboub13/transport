@@ -37,8 +37,18 @@ export class DriverService {
       throw new NotFoundException('err');
     }
   }
-  async getdriverwithbus() {
-    const driverwithbus = await this.busModel.find().populate('BusId').exec();
-    return driverwithbus;
+  async getDriversWithBus() {
+    const drivers = await this.busModel.find().populate('BusId').exec();
+
+    const details = drivers.map((driver) => ({
+      driver: {
+        _id: driver._id,
+        name: driver.name,
+        phone: driver.phone,
+      },
+      bus: driver.BusId,
+    }));
+
+    return { details };
   }
 }

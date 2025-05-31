@@ -53,20 +53,16 @@ export class LinesService {
     return this.lineModel.find().lean().exec();
   }
   async getLinesWithPoints() {
-    // Option 1: Use Mongoose populate if you define 'points' as virtual field in Line
-
-    // But since you didn't show this, simplest way:
-    // fetch all lines, then fetch points for each line
-
-    const lines = await this.lineModel.find().lean();
-
-    // For each line, fetch points
-    const linesWithPoints = await Promise.all(
-      lines.map(async (line) => {
-        const points = await this.pointModel.find({ lineId: line._id }).lean();
-        return { ...line, points };
-      }),
-    );
+    const linesWithPoints = await this.lineModel.aggregate([
+      {
+        $lookup: {
+          from: 'points', // The name of the points collection
+          localField: '_id',
+          foreignField: 'lineId',
+          as: 'points',
+        },
+      },
+    ]);
 
     return linesWithPoints;
   }

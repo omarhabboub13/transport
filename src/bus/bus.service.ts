@@ -31,4 +31,20 @@ export class BusService {
       throw new NotFoundException('err');
     }
   }
+  async getBusesWithTrips() {
+    const busesWithTrips = await this.busModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'trips', // collection name in MongoDB
+            localField: '_id', // field in Bus schema
+            foreignField: 'busId', // field in Trip schema
+            as: 'trips', // alias for the joined data
+          },
+        },
+      ])
+      .exec();
+
+    return { details: busesWithTrips };
+  }
 }

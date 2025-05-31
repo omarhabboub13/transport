@@ -11,13 +11,19 @@ export class TripService {
   ) {}
 
   createtrip(createbody: CreateTripDto) {
-    const newPreset = new this.tripModel({
-      busId: new Types.ObjectId(createbody.busId),
+    const tripData: any = {
       lineId: new Types.ObjectId(createbody.lineId),
       timeId: new Types.ObjectId(createbody.timeId),
-    });
-    return newPreset.save();
+    };
+
+    if (createbody.busId) {
+      tripData.busId = new Types.ObjectId(createbody.busId);
+    }
+
+    const newTrip = new this.tripModel(tripData);
+    return newTrip.save();
   }
+
   async fetchAlltrips() {
     const presets = await this.tripModel.find().exec();
     return presets;
@@ -39,12 +45,19 @@ export class TripService {
     }
   }
   async getAllTripsWithDetails() {
-    return this.tripModel
+    const trips = await this.tripModel
       .find()
       .populate('lineId')
       .populate('timeId')
       .populate('busId')
       .exec();
+
+    const details = trips.map((trip) => ({
+      line: trip.lineId,
+      time: trip.timeId,
+      bus: trip.busId,
+    }));
+
+    return { details };
   }
-  
 }
