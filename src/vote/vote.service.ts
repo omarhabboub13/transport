@@ -13,7 +13,8 @@ export class VoteService {
   createvote(createbody: CreateVoteDto) {
     const newPreset = new this.presetModel({
       studentId: new Types.ObjectId(createbody.studentId),
-      tripId: new Types.ObjectId(createbody.tripId),
+      point_timeId: new Types.ObjectId(createbody.point_timeId),
+      Date: createbody.Date,
     });
     return newPreset.save();
   }
@@ -38,79 +39,22 @@ export class VoteService {
     }
   }
   async getVotesWithPointAndStudents() {
-    const results = await this.presetModel.aggregate([
-      // Lookup trip for each vote
-      {
-        $lookup: {
-          from: 'trips',
-          localField: 'tripId',
-          foreignField: '_id',
-          as: 'trip',
-        },
-      },
-      { $unwind: '$trip' },
+    const votes = await this.presetModel
+      .find()
+      .populate({
+        path: 'point_timeId',
+        populate: [
+          { path: 'pointId', model: 'Point' },
+          { path: 'timeId', model: 'Time' },
+          { path: 'busId', model: 'Bus' },
+        ],
+      })
+      .populate({
+        path: 'studentId',
+        select: 'name phone', // exclude password
+      })
+      .exec();
 
-      // Lookup point by matching trip.lineId === point.lineId
-      {
-        $lookup: {
-          from: 'points',
-          localField: 'trip.lineId',
-          foreignField: 'lineId',
-          as: 'points',
-        },
-      },
-
-      // Lookup all students who voted for trips with the same lineId
-      {
-        $lookup: {
-          from: 'votes',
-          let: { lineId: '$trip.lineId' },
-          pipeline: [
-            {
-              $lookup: {
-                from: 'trips',
-                localField: 'tripId',
-                foreignField: '_id',
-                as: 'tripMatch',
-              },
-            },
-            { $unwind: '$tripMatch' },
-            {
-              $match: {
-                $expr: { $eq: ['$$lineId', '$tripMatch.lineId'] },
-              },
-            },
-            {
-              $lookup: {
-                from: 'students',
-                localField: 'studentId',
-                foreignField: '_id',
-                as: 'student',
-              },
-            },
-            { $unwind: '$student' },
-            {
-              $replaceWith: '$student',
-            },
-          ],
-          as: 'studentsVotedForSamePoint',
-        },
-      },
-
-      // Optional: Remove password before returning
-      {
-        $project: {
-          trip: 1,
-          points: 1,
-          studentsVotedForSamePoint: {
-            _id: 1,
-            name: 1,
-            phone: 1,
-          },
-        },
-      },
-    ]);
-
-    return { details: results };
+    return { details: votes };
   }
 }

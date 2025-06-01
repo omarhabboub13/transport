@@ -7,7 +7,6 @@ export class CreateStudentDto {
   phone: string;
   @IsString()
   password: string;
-  @IsString()
-  presetId: string;
+
 }
 
