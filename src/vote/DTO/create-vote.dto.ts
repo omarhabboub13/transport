@@ -1,11 +1,11 @@
-import { IsInt } from "class-validator";
+import { IsDate, IsInt, IsString } from 'class-validator';
 
 export class CreateVoteDto {
-  @IsInt()
-  tripId: string;
+  @IsDate()
+  Date: Date;
+  @IsString()
+  point_timeId: string;
 
-  @IsInt()
+  @IsString()
   studentId: string;
 }
-
-// export class UpdateVoteDto extends PartialType(CreateVoteDto) {}

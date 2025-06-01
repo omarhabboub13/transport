@@ -20,4 +20,3 @@ export class CreateBusDto {
   currentLocationY: number;
 }
 
-// export class UpdateBusDto extends PartialType(CreateBusDto) {}

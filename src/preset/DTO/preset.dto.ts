@@ -7,4 +7,6 @@ export class CreatePresetDto {
   start_hour: string;
   @IsString()
   end_hour: string;
+  @IsString()
+  studentId: string;
 }

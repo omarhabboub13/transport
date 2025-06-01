@@ -7,10 +7,20 @@ import { CreateBusDto } from './dto/create-bus.dto';
 @Injectable()
 export class BusService {
   constructor(@InjectModel(Bus.name) private readonly busModel: Model<Bus>) {}
-  createbus(createbody: CreateBusDto) {
-    const newbus = new this.busModel(createbody);
-    return newbus.save();
+  async createbus(createbody: CreateBusDto) {
+    const newBus = new this.busModel({
+      number: createbody.number,
+      plateNumber: createbody.plateNumber,
+      photo: createbody.photo,
+      state: createbody.state,
+      currentLocationX: createbody.currentLocationX,
+      currentLocationY: createbody.currentLocationY,
+    });
+    console.log(newBus);
+    
+    return newBus.save();
   }
+
   async fetchAllbuses() {
     const buses = await this.busModel.find().exec();
     return buses;

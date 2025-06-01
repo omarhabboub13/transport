@@ -22,7 +22,6 @@
         id: student._id,
         name: student.name,
         phone: student.phone,
-        PresetId: student.presetId,
       }));
     }
     createstudent(studentBody: CreateStudentDto) {
@@ -30,14 +29,12 @@
         name: studentBody.name,
         phone: studentBody.phone,
         password: studentBody.password,
-        presetId: new Types.ObjectId(studentBody.presetId),
       });
       newstudent.save();
       return {
         id: newstudent._id,
         name: newstudent.name,
         phone: newstudent.phone,
-        PresetId: newstudent.presetId,
       };
     }
     async deletestudent(id: string) {
@@ -75,7 +72,6 @@
             name: updated.name,
             phone: updated.phone,
             password: hashedpassword,
-            presetId: new Types.ObjectId(updated.presetId),
           },
           { new: true }, // Optional: returns the updated document
         )
@@ -88,20 +84,29 @@
       }
     }
     async getStudentsWithPresets() {
-      const students = await this.studentModel
-        .find()
-        .populate('presetId')
-        .exec();
-
-      const details = students.map((student) => ({
-        student: {
-          _id: student._id,
-          name: student.name,
-          phone: student.phone,
+      const results = await this.studentModel.aggregate([
+        {
+          $lookup: {
+            from: 'presets', // collection name (lowercase plural of model)
+            localField: '_id', // field in student
+            foreignField: 'studentId', // field in preset
+            as: 'presets',
+          },
         },
-        preset: student.presetId, // Will be an object or null
-      }));
+        {
+          $project: {
+            name: 1,
+            phone: 1,
+            presets: {
+              _id: 1,
+              day: 1,
+              start_hour: 1,
+              end_hour: 1,
+            },
+          },
+        },
+      ]);
 
-      return { details };
+      return { details: results };
     }
   }

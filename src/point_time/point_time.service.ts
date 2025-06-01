@@ -1,28 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PointTrip } from './pointtrip.schema';
+import { PointTime } from './pointtime.schema';
 import { Model, Types } from 'mongoose';
-import { CreatePointTripDto } from './DTO/create-pointtrip.dto';
+import { CreatePointTimeDto } from './DTO/create-pointtime.dto';
 
 @Injectable()
-export class PointTripService {
+export class PointTimeService {
   constructor(
-    @InjectModel(PointTrip.name)
-    private readonly point_tripModel: Model<PointTrip>,
+    @InjectModel(PointTime.name)
+    private readonly point_tripModel: Model<PointTime>,
   ) {}
 
-  createPoint_trip(createbody: CreatePointTripDto) {
+  createPoint_time(createbody: CreatePointTimeDto) {
     const newPreset = new this.point_tripModel({
       pointId: new Types.ObjectId(createbody.pointId),
-      tripId: new Types.ObjectId(createbody.tripId),
+      timeId: new Types.ObjectId(createbody.timeId),
+      busId:new Types.ObjectId(createbody.busId)
     });
     return newPreset.save();
   }
-  async fetchAllPoint_trip() {
+  async fetchAllPoint_time() {
     const presets = await this.point_tripModel.find().exec();
     return presets;
   }
-  async deletePoint_trip(id: string) {
+  async deletePoint_time(id: string) {
     const del = await this.point_tripModel.findByIdAndDelete(id).exec();
     if (del) {
       return 'deleted successfully';
@@ -30,7 +31,7 @@ export class PointTripService {
       throw new NotFoundException('err');
     }
   }
-  async updatePoint_trip(id: string, updated: CreatePointTripDto) {
+  async updatePoint_time(id: string, updated: CreatePointTimeDto) {
     const update = await this.point_tripModel
       .findByIdAndUpdate(id, updated)
       .exec();
@@ -40,7 +41,7 @@ export class PointTripService {
       throw new NotFoundException('err');
     }
   }
-  async getAllPointTripsWithDetails() {
+  async getAllPointTimesWithDetails() {
     return this.point_tripModel
       .find()
       .populate('pointId')

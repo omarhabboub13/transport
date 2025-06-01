@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Preset } from './preset.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreatePresetDto } from './DTO/preset.dto';
 
 @Injectable()
@@ -11,7 +11,12 @@ export class PresetService {
   ) {}
 
   createpreset(createbody: CreatePresetDto) {
-    const newPreset = new this.presetModel(createbody);
+    const newPreset = new this.presetModel({
+      day: createbody.day,
+      start_hour: createbody.start_hour,
+      end_hour: createbody.end_hour,
+      studentId: new Types.ObjectId(createbody.studentId),
+    });
     return newPreset.save();
   }
   async fetchAllPreset() {
@@ -26,12 +31,13 @@ export class PresetService {
       throw new NotFoundException('err');
     }
   }
-  async updatepreset(id: string,updated:CreatePresetDto) {
-    const update = await this.presetModel.findByIdAndUpdate(id,updated).exec();
+  async updatepreset(id: string, updated: CreatePresetDto) {
+    const update = await this.presetModel.findByIdAndUpdate(id, updated).exec();
     if (update) {
       return 'updated successfully';
     } else {
       throw new NotFoundException('err');
     }
   }
+  
 }

@@ -43,7 +43,6 @@ export class AuthService {
       password: hashedpassword,
       name: restdata.name,
       phone:restdata.phone,
-      presetId: restdata.presetId,
       // role: restdata.role
     });
 
